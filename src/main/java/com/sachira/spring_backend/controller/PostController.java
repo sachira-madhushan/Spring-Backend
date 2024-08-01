@@ -7,10 +7,9 @@ import com.sachira.spring_backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/post")
@@ -18,8 +17,21 @@ public class PostController {
 
     @Autowired
     private PostService postService;
-    public void get(){
 
+    @GetMapping
+    public List<PostDTO> get(){
+        List<PostDTO> posts=postService.getPostAllPosts();
+        return posts;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getPostById(@PathVariable Integer id){
+        PostDTO post=postService.getPostById(id);
+        if(post!=null){
+            return new ResponseEntity<>(post,HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
@@ -28,11 +40,22 @@ public class PostController {
         return new ResponseEntity<>(cretedPost, HttpStatus.CREATED);
     }
 
-    public void delete(){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Integer id){
+        boolean result=postService.deletePost(id);
+        if(result){
+            return new ResponseEntity<>("Post Deleted!",HttpStatus.OK);
+        }
 
+        return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
     }
 
-    public void update(){
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody PostDTO postDTO){
+        Object result=postService.updatePost(postDTO,id);
+        if(result!=null){
+            return new ResponseEntity<>(result,HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
     }
 }
