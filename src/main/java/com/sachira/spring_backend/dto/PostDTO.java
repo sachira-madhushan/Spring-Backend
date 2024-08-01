@@ -1,26 +1,22 @@
-package com.sachira.spring_backend.entity;
+package com.sachira.spring_backend.dto;
 
-import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
-
-@Entity
-public class Post {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class PostDTO {
     private int id;
     private String title;
     private String content;
 
-    public Post() {
+    public PostDTO() {
 
     }
 
-    public Post(String title, String content) {
+    public PostDTO(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public PostDTO(int id, String title, String content) {
+        this.id = id;
         this.title = title;
         this.content = content;
     }
