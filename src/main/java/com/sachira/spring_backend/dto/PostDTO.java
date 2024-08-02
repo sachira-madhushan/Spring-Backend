@@ -5,6 +5,15 @@ public class PostDTO {
     private int id;
     private String title;
     private String content;
+    private String image;
+
+    public PostDTO(int id, String title, String content, String image) {
+        this.id = id;
+        this.title = title;
+        this.setContent(content);
+        this.setImage(image);
+    }
+
 
     public PostDTO() {
 
@@ -12,13 +21,13 @@ public class PostDTO {
 
     public PostDTO(String title, String content) {
         this.title = title;
-        this.content = content;
+        this.setContent(content);
     }
 
     public PostDTO(int id, String title, String content) {
         this.id = id;
         this.title = title;
-        this.content = content;
+        this.setContent(content);
     }
 
     public int getId() {
@@ -43,5 +52,13 @@ public class PostDTO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -58,4 +60,11 @@ public class PostController {
         }
         return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
     }
+
+    @PostMapping("/upload/{id}")
+    public ResponseEntity<PostDTO> uploadPostImage(@PathVariable Integer id,@RequestParam(name = "file") MultipartFile file) throws IOException {
+        PostDTO post = postService.uploadPostImage(file, id);
+        return new ResponseEntity<>(post, HttpStatus.CREATED);
+    }
+    
 }

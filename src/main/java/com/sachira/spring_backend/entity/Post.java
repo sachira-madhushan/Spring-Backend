@@ -1,11 +1,6 @@
 package com.sachira.spring_backend.entity;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Entity
 public class Post {
@@ -15,10 +10,21 @@ public class Post {
     private int id;
     private String title;
     private String content;
-
+    private String image;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
     public Post() {
 
     }
+
+//    public Post(int id, String title, String content, String image, User user) {
+//        this.id = id;
+//        this.title = title;
+//        this.content = content;
+//        this.image = image;
+//        this.user = user;
+//    }
 
     public Post(String title, String content) {
         this.title = title;
@@ -47,5 +53,13 @@ public class Post {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
