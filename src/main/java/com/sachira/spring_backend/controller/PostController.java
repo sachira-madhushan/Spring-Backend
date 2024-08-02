@@ -5,7 +5,9 @@ import com.sachira.spring_backend.entity.Post;
 import com.sachira.spring_backend.repo.PostRepo;
 import com.sachira.spring_backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +67,15 @@ public class PostController {
     public ResponseEntity<PostDTO> uploadPostImage(@PathVariable Integer id,@RequestParam(name = "file") MultipartFile file) throws IOException {
         PostDTO post = postService.uploadPostImage(file, id);
         return new ResponseEntity<>(post, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getPostImage(@PathVariable Integer id) throws IOException {
+        byte[] image=postService.getPostImage(id);
+        HttpHeaders headers=new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        return new ResponseEntity<>(image,headers,HttpStatus.OK);
     }
     
 }

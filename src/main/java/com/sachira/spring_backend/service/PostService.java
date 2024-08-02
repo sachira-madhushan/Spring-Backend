@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -74,5 +75,12 @@ public class PostService {
         Post savedPost=postRepo.save(post);
 
         return new PostDTO(savedPost.getId(), savedPost.getTitle(), savedPost.getContent(),savedPost.getImage());
+    }
+
+    public byte[] getPostImage(Integer id) throws IOException {
+        Post post=postRepo.findById(id).get();
+        String filename=post.getImage();
+        Path uploadPath=Paths.get(filename);
+        return Files.readAllBytes(uploadPath);
     }
 }
