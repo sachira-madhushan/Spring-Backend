@@ -8,13 +8,26 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String username;
     private String email;
     private String password;
-//    @OneToMany(mappedBy = "Post")
-//    @JoinColumn(name = "user_id")
-//    private List<Post> posts;
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User() {
+    }
+
+    public User(Integer id, String username, String email, String password) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     public int getId() {
         return id;

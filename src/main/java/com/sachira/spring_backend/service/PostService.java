@@ -3,6 +3,7 @@ package com.sachira.spring_backend.service;
 import com.sachira.spring_backend.dto.PostDTO;
 import com.sachira.spring_backend.entity.Post;
 import com.sachira.spring_backend.repo.PostRepo;
+import com.sachira.spring_backend.utils.JWTAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class PostService {
     @Autowired
     private PostRepo postRepo;
+
 
     public PostDTO createPost(PostDTO postDTO){
        Post savedPost= postRepo.save(new Post(postDTO.getTitle(),postDTO.getContent()));

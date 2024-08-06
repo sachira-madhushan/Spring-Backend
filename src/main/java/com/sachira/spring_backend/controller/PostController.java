@@ -4,6 +4,7 @@ import com.sachira.spring_backend.dto.PostDTO;
 import com.sachira.spring_backend.entity.Post;
 import com.sachira.spring_backend.repo.PostRepo;
 import com.sachira.spring_backend.service.PostService;
+import com.sachira.spring_backend.utils.JWTAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+    @Autowired
+    JWTAuthenticator jwtAuthenticator;
 
     @GetMapping
     public List<PostDTO> get(){
@@ -39,9 +42,14 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> create(@RequestBody PostDTO postDTO){
-        PostDTO cretedPost=postService.createPost(postDTO);
-        return new ResponseEntity<>(cretedPost, HttpStatus.CREATED);
+    public ResponseEntity<PostDTO> create(@RequestBody PostDTO postDTO,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+
+        if(jwtAuthenticator.validateJwtToken(token)){
+            PostDTO cretedPost=postService.createPost(postDTO);
+            jwtAuthenticator.getUserByToken(token);
+            return new ResponseEntity<>(cretedPost, HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
     @DeleteMapping("/{id}")
