@@ -25,14 +25,20 @@ public class PostController {
     @Autowired
     private PostService postService;
     @Autowired
-    JWTAuthenticator jwtAuthenticator;
+    private JWTAuthenticator jwtAuthenticator;
 
+    //@Route GET /post
+    //@Access Public
+    //@Use Get all posts
     @GetMapping
     public List<PostDTO> get(){
         List<PostDTO> posts=postService.getPostAllPosts();
         return posts;
     }
 
+    //@Route GET /post/{id}
+    //@Access Public
+    //@Use Get a post
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPostById(@PathVariable Integer id){
         PostDTO post=postService.getPostById(id);
@@ -43,6 +49,9 @@ public class PostController {
         return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
     }
 
+    //@Route POST /post
+    //@Access Private
+    //@Use Add new post
     @PostMapping
     public ResponseEntity<PostDTO> create(@RequestBody PostDTO postDTO,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
 
@@ -62,6 +71,9 @@ public class PostController {
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
+    //@Route DELETE /post/{id}
+    //@Access Private
+    //@Use Delete a post
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Integer id,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
         if(jwtAuthenticator.validateJwtToken(token)){
@@ -88,6 +100,9 @@ public class PostController {
         return new ResponseEntity<>("Post not found",HttpStatus.NOT_FOUND);
     }
 
+    //@Route PUT /post/{id}
+    //@Access Private
+    //@Use Update a post
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody PostDTO postDTO,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
         if(jwtAuthenticator.validateJwtToken(token)){
@@ -113,6 +128,9 @@ public class PostController {
         return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
     }
 
+    //@Route PUT /post/upload/{id}
+    //@Access Private
+    //@Use Upload the post image
     @PostMapping("/upload/{id}")
     public ResponseEntity<Object> uploadPostImage(@PathVariable Integer id,@RequestParam(name = "file") MultipartFile file,@RequestHeader(HttpHeaders.AUTHORIZATION )String token) throws IOException {
         if(jwtAuthenticator.validateJwtToken(token)){
@@ -136,6 +154,9 @@ public class PostController {
 
     }
 
+    //@Route GET /post/image/{id}
+    //@Access Public
+    //@Use Get post image
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getPostImage(@PathVariable Integer id) throws IOException {
 
