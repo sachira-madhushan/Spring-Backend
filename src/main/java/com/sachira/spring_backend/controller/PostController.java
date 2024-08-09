@@ -1,6 +1,7 @@
 package com.sachira.spring_backend.controller;
 
 import com.sachira.spring_backend.dto.PostDTO;
+import com.sachira.spring_backend.dto.UserDTO;
 import com.sachira.spring_backend.entity.Post;
 import com.sachira.spring_backend.entity.User;
 import com.sachira.spring_backend.repo.PostRepo;
@@ -62,13 +63,27 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Integer id){
-        boolean result=postService.deletePost(id);
-        if(result){
-            return new ResponseEntity<>("Post Deleted!",HttpStatus.OK);
-        }
+    public ResponseEntity<String> delete(@PathVariable Integer id,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+        if(jwtAuthenticator.validateJwtToken(token)){
+            User user=jwtAuthenticator.getUserByToken(token);
+            if(user!=null){
+                int postOwnerId=postService.getPostById(id).getUser();
+                if(user.getId()==postOwnerId){
+                    boolean result=postService.deletePost(id);
+                    if(result){
+                        return new ResponseEntity<>("Post Deleted!",HttpStatus.OK);
+                    }
+                }else{
+                    return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+                }
 
-        return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
+            }else{
+                return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+            }
+        }else{
+            return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity<>("Post not found",HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/{id}")
