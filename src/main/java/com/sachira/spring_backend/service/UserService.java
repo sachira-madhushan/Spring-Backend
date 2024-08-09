@@ -1,9 +1,6 @@
 package com.sachira.spring_backend.service;
 
-import com.sachira.spring_backend.dto.LoginDTO;
-import com.sachira.spring_backend.dto.LoginMessageDTO;
-import com.sachira.spring_backend.dto.RegisterDTO;
-import com.sachira.spring_backend.dto.UserDTO;
+import com.sachira.spring_backend.dto.*;
 import com.sachira.spring_backend.entity.User;
 import com.sachira.spring_backend.repo.UserRepo;
 import com.sachira.spring_backend.utils.JWTAuthenticator;
@@ -42,5 +39,14 @@ public class UserService {
             }
 
             return new LoginMessageDTO(loginDTO.getEmail(),"Login failed");
+    }
+
+    public Object getUserByID(int id) {
+        Optional<User> user=userRepo.getUserById(id);
+        if(user.isPresent()) {
+            return new UserReturnDTO(user.get().getId(),user.get().getUsername(),user.get().getEmail());
+        }else{
+            return null;
+        }
     }
 }

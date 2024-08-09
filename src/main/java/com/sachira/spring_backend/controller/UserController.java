@@ -34,5 +34,17 @@ public class UserController {
         LoginMessageDTO message=userService.loginUser(loginDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-    
+
+    //@Route GET /user/{id}
+    //@Access Public
+    //@Use Get user by id
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getUser(@PathVariable int id) {
+        Object user=userService.getUserByID(id);
+        if(user!=null){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("User not found",HttpStatus.NOT_FOUND);
+        }
+    }
 }
