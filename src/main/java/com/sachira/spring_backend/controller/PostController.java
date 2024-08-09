@@ -114,13 +114,31 @@ public class PostController {
     }
 
     @PostMapping("/upload/{id}")
-    public ResponseEntity<PostDTO> uploadPostImage(@PathVariable Integer id,@RequestParam(name = "file") MultipartFile file) throws IOException {
-        PostDTO post = postService.uploadPostImage(file, id);
-        return new ResponseEntity<>(post, HttpStatus.CREATED);
+    public ResponseEntity<Object> uploadPostImage(@PathVariable Integer id,@RequestParam(name = "file") MultipartFile file,@RequestHeader(HttpHeaders.AUTHORIZATION )String token) throws IOException {
+        if(jwtAuthenticator.validateJwtToken(token)){
+            PostDTO post=postService.getPostById(id);
+            if(post==null)return new ResponseEntity<>("Post not found",HttpStatus.NOT_FOUND);
+            User user=jwtAuthenticator.getUserByToken(token);
+            if(user!=null){
+                int postOwnerId = postService.getPostById(id).getUser();
+                if (user.getId() == postOwnerId) {
+                    PostDTO updatedPost = postService.uploadPostImage(file, id);
+                    return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+                }
+            }else{
+                return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+            }
+        }else{
+            return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getPostImage(@PathVariable Integer id) throws IOException {
+
         byte[] image=postService.getPostImage(id);
         HttpHeaders headers=new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG);
