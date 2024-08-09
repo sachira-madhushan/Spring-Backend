@@ -13,6 +13,20 @@ public class User {
     private String email;
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    //@JoinColumn(name = "user_id")
+    private List<Post> posts;
+
+    public User(Integer id, String username, String email, String password, List<Post> posts) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.posts = posts;
+    }
+
+
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
@@ -61,11 +75,12 @@ public class User {
         this.password = password;
     }
 
-//    public List<Post> getPosts() {
-//        return posts;
-//    }
-//
-//    public void setPosts(List<Post> posts) {
-//        this.posts = posts;
-//    }
+    public List<Post> getPost() {
+        return posts;
+    }
+
+    public void setPost(List<Post> posts) {
+        this.posts = posts;
+    }
+
 }

@@ -1,11 +1,24 @@
 package com.sachira.spring_backend.dto;
 
 
+import com.sachira.spring_backend.entity.User;
+
 public class PostDTO {
     private int id;
     private String title;
     private String content;
     private String image;
+    private int user_id;
+
+
+    public PostDTO(int id, String title, String content, String image, int user_id) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.image = image;
+        this.setUser(user_id);
+    }
+
 
     public PostDTO(int id, String title, String content, String image) {
         this.id = id;
@@ -28,6 +41,13 @@ public class PostDTO {
         this.id = id;
         this.title = title;
         this.setContent(content);
+    }
+
+    public PostDTO(int id,String title, String content, int user_id) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.user_id = user_id;
     }
 
     public int getId() {
@@ -60,5 +80,13 @@ public class PostDTO {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public int getUser() {
+        return user_id;
+    }
+
+    public void setUser(int user_id) {
+        this.user_id = user_id;
     }
 }

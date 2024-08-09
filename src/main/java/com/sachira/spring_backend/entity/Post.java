@@ -11,20 +11,28 @@ public class Post {
     private String title;
     private String content;
     private String image;
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Post(String title, String content, User user) {
+        this.title = title;
+        this.content = content;
+        this.setUser(user);
+    }
+
+
     public Post() {
 
     }
 
-//    public Post(int id, String title, String content, String image, User user) {
-//        this.id = id;
-//        this.title = title;
-//        this.content = content;
-//        this.image = image;
-//        this.user = user;
-//    }
+    public Post(int id, String title, String content, String image, User user) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.image = image;
+        this.setUser(user);
+    }
 
     public Post(String title, String content) {
         this.title = title;
@@ -61,5 +69,13 @@ public class Post {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

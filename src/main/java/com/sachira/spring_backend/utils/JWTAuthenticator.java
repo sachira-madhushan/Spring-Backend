@@ -38,6 +38,7 @@ public class JWTAuthenticator {
         String id = Jwts.parser().setSigningKey(key()).build().parseClaimsJws(jwtToken).getBody().getId();
 
        Optional<User> user= userRepo.getUserById(Integer.parseInt(id));
+       System.out.println(user.get().getId());
        return user.get();
     }
 

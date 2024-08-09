@@ -2,6 +2,7 @@ package com.sachira.spring_backend.controller;
 
 import com.sachira.spring_backend.dto.PostDTO;
 import com.sachira.spring_backend.entity.Post;
+import com.sachira.spring_backend.entity.User;
 import com.sachira.spring_backend.repo.PostRepo;
 import com.sachira.spring_backend.service.PostService;
 import com.sachira.spring_backend.utils.JWTAuthenticator;
@@ -45,9 +46,17 @@ public class PostController {
     public ResponseEntity<PostDTO> create(@RequestBody PostDTO postDTO,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
 
         if(jwtAuthenticator.validateJwtToken(token)){
-            PostDTO cretedPost=postService.createPost(postDTO);
-            jwtAuthenticator.getUserByToken(token);
-            return new ResponseEntity<>(cretedPost, HttpStatus.CREATED);
+
+            User user=jwtAuthenticator.getUserByToken(token);
+            if(user!=null){
+                PostDTO createdPost=postService.createPost(postDTO,user);
+
+                return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            }
+
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }

@@ -2,6 +2,7 @@ package com.sachira.spring_backend.service;
 
 import com.sachira.spring_backend.dto.PostDTO;
 import com.sachira.spring_backend.entity.Post;
+import com.sachira.spring_backend.entity.User;
 import com.sachira.spring_backend.repo.PostRepo;
 import com.sachira.spring_backend.utils.JWTAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class PostService {
     private PostRepo postRepo;
 
 
-    public PostDTO createPost(PostDTO postDTO){
-       Post savedPost= postRepo.save(new Post(postDTO.getTitle(),postDTO.getContent()));
-       PostDTO savedPostDTO=new PostDTO(savedPost.getId(), savedPost.getTitle(), savedPost.getContent());
+    public PostDTO createPost(PostDTO postDTO, User user){
+       Post savedPost= postRepo.save(new Post(postDTO.getTitle(),postDTO.getContent(),user));
+       PostDTO savedPostDTO=new PostDTO(savedPost.getId(), savedPost.getTitle(), savedPost.getContent(),savedPost.getUser().getId());
        return savedPostDTO;
     }
 
@@ -33,7 +34,7 @@ public class PostService {
         List<Post> posts=postRepo.findAll();
         List<PostDTO> postDTOS=new ArrayList<>();
         for(Post post:posts){
-            postDTOS.add(new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getImage()));
+            postDTOS.add(new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getImage(),post.getUser().getId()));
         }
 
         return postDTOS;
@@ -42,7 +43,7 @@ public class PostService {
     public PostDTO getPostById(Integer id){
         Optional<Post> post=postRepo.findById(id);
         if(post.isPresent()){
-            return new PostDTO(post.get().getId(), post.get().getTitle(), post.get().getContent(),post.get().getImage());
+            return new PostDTO(post.get().getId(), post.get().getTitle(), post.get().getContent(),post.get().getImage(),post.get().getUser().getId());
         }
         return null;
     }
