@@ -65,6 +65,8 @@ public class PostController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Integer id,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
         if(jwtAuthenticator.validateJwtToken(token)){
+            PostDTO post=postService.getPostById(id);
+            if(post==null)return new ResponseEntity<>("Post not found",HttpStatus.NOT_FOUND);
             User user=jwtAuthenticator.getUserByToken(token);
             if(user!=null){
                 int postOwnerId=postService.getPostById(id).getUser();
@@ -87,10 +89,26 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody PostDTO postDTO){
-        Object result=postService.updatePost(postDTO,id);
-        if(result!=null){
-            return new ResponseEntity<>(result,HttpStatus.OK);
+    public ResponseEntity<Object> update(@PathVariable Integer id, @RequestBody PostDTO postDTO,@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+        if(jwtAuthenticator.validateJwtToken(token)){
+            PostDTO post=postService.getPostById(id);
+            if(post==null)return new ResponseEntity<>("Post not found",HttpStatus.NOT_FOUND);
+            User user=jwtAuthenticator.getUserByToken(token);
+            if(user!=null){
+                int postOwnerId = postService.getPostById(id).getUser();
+                if (user.getId() == postOwnerId) {
+                    Object result = postService.updatePost(postDTO, id);
+                    if (result != null){
+                        return new ResponseEntity<>(result,HttpStatus.OK);
+                    }
+                }else{
+                    return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+                }
+            }else{
+                return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
+            }
+        }else{
+            return new ResponseEntity<>("Unauthorized",HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>("Post not found!",HttpStatus.NOT_FOUND);
     }

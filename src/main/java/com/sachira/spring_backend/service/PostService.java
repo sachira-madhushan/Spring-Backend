@@ -63,7 +63,7 @@ public class PostService {
             post.setContent(postDTO.getContent());
             postRepo.save(post);
 
-            return new PostDTO(post.getId(),post.getTitle(),post.getContent());
+            return new PostDTO(post.getId(),post.getTitle(),post.getContent(),post.getImage(),post.getUser().getId());
         }
         return null;
     }
