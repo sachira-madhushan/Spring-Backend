@@ -9,15 +9,15 @@ import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
+    //@Route POST /user/register
+    //@Access Public
+    //@Use Register a new user
     @Autowired
     private UserService userService;
     @PostMapping("/register")
@@ -25,9 +25,14 @@ public class UserController {
         RegisterDTO user=userService.registerUser(userDTO);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
+
+    //@Route POST /user/login
+    //@Access Public
+    //@Use Login user
     @PostMapping("/login")
     public ResponseEntity<LoginMessageDTO> login(@RequestBody LoginDTO loginDTO) {
         LoginMessageDTO message=userService.loginUser(loginDTO);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
+    
 }
